@@ -3,6 +3,8 @@ import { Calendar } from '@/app/component/render-calendar'
 import { Clock } from '@/app/component/update-clock' 
 import { Todolist } from '@/app/component/todolist'
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 const Page = () => {
 
   return (
