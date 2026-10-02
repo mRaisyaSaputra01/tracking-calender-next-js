@@ -1,0 +1,864 @@
+:root {
+    --page: #0b0d14;
+    --surface: #151824;
+    --surface-raised: #1d2130;
+    --border: #2b3040;
+    --text: #f7f8fc;
+    --muted: #969caf;
+    --accent: #8470ff;
+    --accent-soft: rgba(132, 112, 255, 0.16);
+    --danger: #e57373;
+    --danger-soft: rgba(229, 115, 115, 0.14);
+
+}
+
+body[data-theme="light"] {
+    --page: #f4f5fa;
+    --surface: #ffffff;
+    --surface-raised: #f8f9fd;
+    --border: #e1e4ee;
+    --text: #202333;
+    --muted: #73798c;
+    --accent: #705ce6;
+    --accent-soft: rgba(112, 92, 230, 0.12);
+    --danger: #d95c68;
+    --danger-soft: rgba(229, 115, 115, 0.14);
+
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Transisi Theme */
+body,
+.header,
+.main,
+.clock,
+.todolist-container,
+.calendar,
+.dark-light,
+.profile,
+.prev-btn,
+.next-btn,
+#taskInput {
+    transition:
+        background-color 200ms ease,
+        border-color 200ms ease,
+        color 200ms ease;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--page);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Ini halaman login */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 32px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+}
+
+.login-container p {
+    margin-right: auto;
+}
+
+.username-input,
+.password-input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.88rem;
+    outline: none;
+    padding: 11px 12px;
+}
+
+.username-input::placeholder,
+.password-input::placeholder {
+    color: var(--muted);
+}
+
+.username-input.error::placeholder,
+.password-input.error::placeholder {
+    color: var(--danger);
+}
+
+.username-input,
+.password-input {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Ini halaman utama */
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px;
+    gap: 8px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    max-width: 1180px;
+    width: 100%;
+    min-height: 22px;
+    padding: 10px 28px;
+    margin: 0 auto;
+    background-color: var(--surface);
+    justify-content: space-between;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+}
+
+.header h2 {
+    font-size: 1.65rem;
+    letter-spacing: -0.005em;
+}
+
+.navbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.dark-light,
+.profile {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--text);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.dark-light:hover,
+.profile:hover,
+.dark-light:focus-visible,
+.profile:focus-visible {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    outline: none;
+}
+
+.dark-light:active,
+.profile:active {
+    transform: scale(0.95);
+}
+
+.profile-container {
+    position: relative;
+}
+
+.profile {
+    margin-top: 0;
+}
+
+.profile-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 225px;
+    max-width: calc(100vw - 20px);
+    margin-top: 0;
+    /* max-width: 225px;
+    margin-top: 10px; */
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    display: none;
+}
+
+.profile-menu.active {
+    display: block;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-info img {
+    width: 38px;
+    height: 38px;
+
+    padding: 8px;
+
+    background: var(--surface-raised);
+    border-radius: 50%;
+}
+
+.profile-info h4 {
+    margin: 0;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.profile-info p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.profile-menu hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14px 0;
+}
+
+.profile-link {
+    display: block;
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+    color: var(--text);
+
+    text-align: left;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.profile-link:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.profile-link.logout {
+    color: var(--danger);
+}
+
+.profile-link.logout:hover {
+    background: rgba(229, 115, 115, 0.12);
+    color: var(--danger);
+}
+
+.main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 24px;
+    width: 100%;
+    max-width: 1180px;
+    min-height: 700px;
+    margin: 0 auto;
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+}
+
+.calendar {
+    flex: 1;
+}
+
+.month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.month-nav h2 {
+    min-width: 200px;
+    margin: 0;
+    color: var(--text);
+    font-size: 1.5rem;
+    letter-spacing: -0.04em;
+    text-align: center;
+}
+
+.prev-btn,
+.next-btn {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-raised);
+    color: var(--text);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.prev-btn:hover,
+.next-btn:hover,
+.prev-btn:focus-visible,
+.next-btn:focus-visible {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    outline: none;
+}
+
+.prev-btn:active,
+.next-btn:active {
+    transform: scale(0.95);
+}
+
+.weekdays,
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0px, 1fr));
+    text-align: center;
+}
+
+.weekdays {
+    margin-bottom: 15px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.calendar {
+    gap: 20px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-raised);
+}
+
+.day,
+.empty {
+    display: grid;
+    width: 100%;
+    min-height: 48px;
+    place-items: center;
+    border-radius: 12px;
+}
+
+.day {
+    background: transparent;
+    color: var(--text);
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.day.today-highlight {
+    background: var(--accent-soft);
+    color: var(--text);
+}
+
+.day:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+    transform: translateY(-1px);
+}
+
+.day.success {
+    background: green;
+    color: white;
+}
+
+.day.fail {
+    background: red;
+    color: white;
+}
+
+.empty {
+    visibility: hidden;
+}
+
+aside {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.clock,
+.todolist-container {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-raised);
+}
+
+.clock {
+    min-height: 110px;
+    padding: 24px;
+    align-content: center;
+    color: var(--text);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    text-align: center;
+}
+
+.todolist-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 18px;
+}
+
+.todolist {
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--surface-raised);
+    min-height: 0;
+    color: var(--text);
+}
+
+.task-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.todolist p {
+    margin: 0;
+    padding: 12px 0;
+    font-size: 0.9rem;
+}
+
+.completed {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--muted);
+    opacity: 0.7;
+}
+
+.remove-btn,
+.done-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    /* background: var(--surface); */
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+/* Beda warna biar keduanya gampang dibedakan */
+.done-btn {
+    background: var(--accent);
+}
+
+.done-btn:hover {
+    filter: brightness(1.12);
+    background: var(--accent);
+    border-color: var(--accent-soft);
+}
+
+.remove-btn {
+    background: var(--danger);
+}
+
+.remove-btn:hover {
+    filter: brightness(1.12);
+    background: var(--danger);
+    border-color: var(--danger-soft);
+}
+
+.remove-btn:active,
+.done-btn:active {
+    transform: scale(0.95);
+}
+
+.submit-todolist {
+    display: flex;
+    gap: 9px;
+    margin-top: auto;
+}
+
+.submit-todolist form {
+    display: flex;
+    gap: 12px;
+}
+
+#taskInput {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.88rem;
+    outline: none;
+    padding: 11px 12px;
+}
+
+#taskInput::placeholder {
+    color: var(--muted);
+}
+
+#taskInput.error::placeholder {
+    color: var(--danger);
+}
+
+#taskInput:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.submit-btn {
+    border: 0;
+    border-radius: 10px;
+    background-color: var(--accent);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.83rem;
+    font-weight: 700;
+    padding: 0 14px;
+    transition: filter 160ms ease, transform 160ms ease;
+}
+
+.submit-btn:hover,
+.submit-btn:focus-visible {
+    filter: brightness(1.12);
+    outline: none;
+}
+
+.submit-btn:active {
+    transform: scale(0.97);
+}
+
+/* =========================
+   RESPONSIVE TABLET
+========================= */
+
+@media (max-width: 780px) {
+
+    .app {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .header {
+        padding: 10px 18px;
+        border-radius: 18px;
+    }
+
+    .header h2 {
+        font-size: 1.4rem;
+    }
+
+    .navbar-btn {
+        margin-right: 12px;
+    }
+
+    .main {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        min-height: auto;
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    /*
+       Kalender memenuhi lebar layar
+    */
+    .calendar-container {
+        width: 100%;
+    }
+
+    .weekdays,
+    .calendar {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .calendar {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .day,
+    .empty {
+        min-height: 48px;
+    }
+
+    /*
+       Clock dan Todo ditumpuk
+    */
+    aside {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .clock {
+        min-height: 100px;
+        font-size: 1.8rem;
+    }
+
+    .todolist-container {
+        min-height: 250px;
+    }
+}
+
+
+/* =========================
+   RESPONSIVE HP
+========================= */
+
+@media (max-width: 480px) {
+
+    .app {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    /* HEADER */
+
+    .header {
+        padding: 9px 12px;
+        border-radius: 15px;
+    }
+
+    .header h2 {
+        font-size: 1.1rem;
+    }
+
+    .navbar-btn {
+        gap: 8px;
+        margin-right: 5px;
+    }
+
+    .dark-light,
+    .profile {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+    }
+
+
+    /* MAIN */
+
+    .main {
+        gap: 14px;
+        padding: 12px;
+        border-radius: 15px;
+    }
+
+
+    /* MONTH NAVIGATION */
+
+    .month-nav {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .month-nav h2 {
+        min-width: 0;
+        flex: 1;
+        font-size: 1.15rem;
+    }
+
+    .prev-btn,
+    .next-btn {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+    }
+
+
+    /* WEEKDAYS */
+
+    .weekdays {
+        margin-bottom: 8px;
+        font-size: 0.58rem;
+    }
+
+
+    /* CALENDAR */
+
+    .calendar {
+        gap: 4px;
+        padding: 7px;
+        border-radius: 12px;
+    }
+
+    .weekdays,
+    .calendar {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .day,
+    .empty {
+        min-height: 38px;
+        border-radius: 8px;
+    }
+
+    .day {
+        font-size: 0.9rem;
+    }
+
+
+    /* CLOCK */
+
+    .clock {
+        min-height: 90px;
+        padding: 18px;
+        font-size: 1.6rem;
+    }
+
+
+    /* TODO */
+
+    .todolist-container {
+        min-height: 220px;
+        padding: 14px;
+    }
+
+    .todolist {
+        max-height: 300px;
+    }
+
+    .submit-todolist {
+        gap: 7px;
+    }
+
+    #taskInput {
+        min-height: 42px;
+        font-size: 16px;
+    }
+
+    .submit-btn {
+        min-width: 70px;
+        min-height: 42px;
+        padding: 0 10px;
+    }
+
+
+    /* TASK */
+
+    .task-item {
+        gap: 6px;
+    }
+
+    .todolist p {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: 0.85rem;
+    }
+
+    .task-actions {
+        flex-shrink: 0;
+    }
+}
+
+
+/* =========================
+   HP SANGAT KECIL
+========================= */
+
+@media (max-width: 360px) {
+
+    .app {
+        padding: 6px;
+    }
+
+    .header {
+        padding: 8px 10px;
+    }
+
+    .header h2 {
+        font-size: 1rem;
+    }
+
+    .main {
+        padding: 9px;
+    }
+
+    .month-nav h2 {
+        font-size: 1rem;
+    }
+
+    .prev-btn,
+    .next-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .calendar {
+        gap: 3px;
+        padding: 5px;
+    }
+
+    .day,
+    .empty {
+        min-height: 34px;
+        border-radius: 7px;
+    }
+
+    .day {
+        font-size: 0.8rem;
+    }
+
+    .clock {
+        font-size: 1.4rem;
+    }
+
+    .submit-todolist {
+        flex-direction: column;
+    }
+
+    .submit-btn {
+        width: 100%;
+        min-height: 40px;
+    }
+}
