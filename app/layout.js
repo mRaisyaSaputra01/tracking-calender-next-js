@@ -3,6 +3,8 @@ import ProfileButton from "@/app/component/profile-button"
 import ThemeButton from "@/app/component/theme-button"
 import { ThemeProvider } from "@/app/context/theme-context"
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 export default function DashboardLayout({ children }) {
   return (
@@ -26,6 +28,7 @@ export default function DashboardLayout({ children }) {
           {/* Place children where you want to render a page or nested layout */}
         </ThemeProvider>
       </body>
+      <SpeedInsights />
     </html>
   )
 }
