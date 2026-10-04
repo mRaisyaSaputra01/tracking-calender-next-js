@@ -1,8 +1,10 @@
 import './global.css'
+
+import Link from "next/link"
 import ProfileButton from "@/app/component/profile-button"
 import ThemeButton from "@/app/component/theme-button"
 import { ThemeProvider } from "@/app/context/theme-context"
-
+import SessionProviderWrapper from "@/app/component/session-provider"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 
@@ -11,6 +13,8 @@ export default function DashboardLayout({ children }) {
     <html lang="en">
       <body>
         <ThemeProvider>
+
+          <SessionProviderWrapper>
           <div className="app">
 
             <div className="header">
@@ -26,6 +30,7 @@ export default function DashboardLayout({ children }) {
           </div>
           {/* Layout UI */}
           {/* Place children where you want to render a page or nested layout */}
+          </SessionProviderWrapper>
         </ThemeProvider>
       </body>
       <SpeedInsights />
