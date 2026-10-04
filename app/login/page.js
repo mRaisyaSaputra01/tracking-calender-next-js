@@ -1,5 +1,4 @@
 import Link from "next/link"
-router.push("/")
 
 const Page = () => {
     
