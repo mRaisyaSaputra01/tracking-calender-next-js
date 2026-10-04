@@ -8,7 +8,7 @@ import { useTheme } from "@/app/context/theme-context"
 import LoginButton from "@/app/component/login-button"
 
 
-const ProfileButton = () => {
+const ProfileButton = ({user}) => {
     const { isDark } = useTheme()
     const [isOpen, setIsOpen] = useState(false)
     const profileRef = useRef(null)
@@ -42,7 +42,10 @@ const ProfileButton = () => {
                 <div className="profile-menu active" id="profileMenu">
                     <div className="profile-info">
                         <Image className='profile-img' src={isDark ? ProfileDark : ProfileLight} alt="Profile Icon" />
-                        <h4>Raisya Saputra</h4>
+                        <div>
+                        <h4>{user?.name}</h4>
+                        <p>{user?.email}</p>
+                        </div>
                     </div>
                     <hr />
                     <button className="profile-link">Setting</button>

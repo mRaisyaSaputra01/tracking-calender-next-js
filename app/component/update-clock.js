@@ -18,7 +18,7 @@ export const Clock = () => {
     const seconds = String(time.getSeconds()).padStart(2, '0')
 
     return (
-        <div className="clock" >
+        <div className="clock">
             {hours} : {minutes} : {seconds}
         </div>
     )

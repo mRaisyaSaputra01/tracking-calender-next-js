@@ -6,9 +6,12 @@ import ThemeButton from "@/app/component/theme-button"
 import { ThemeProvider } from "@/app/context/theme-context"
 import SessionProviderWrapper from "@/app/component/session-provider"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { authUserSession } from "@/app/libs/auth-libs"
 
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+  const user = await authUserSession()
+
   return (
     <html lang="en">
       <body>
@@ -23,7 +26,7 @@ export default function DashboardLayout({ children }) {
               <div className="navbar-btn">
                 <ThemeButton />
               </div>
-              <ProfileButton />
+              <ProfileButton user={user}/>
 
             </div>
             {children}
