@@ -1,36 +1,47 @@
 'use client'
-import { useState, useEffect } from 'react'
+
+import { useState } from 'react'
 
 const months = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember'
-];
+    'Januari', 'Februari', 'Maret', 'April',
+    'Mei', 'Juni', 'Juli', 'Agustus',
+    'September', 'Oktober', 'November', 'Desember'
+]
 
-export const Calendar = () => {
-    const current = new Date()
+function getTodayWIB() {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).formatToParts(new Date())
 
-    let [month, setMonth] = useState(current.getMonth())
-    let [year, setYear] = useState(current.getFullYear())
-    const currentToday = current.getDate()
-    const currentMonth = current.getMonth()
-    const currentYear = current.getFullYear()
+    const values = Object.fromEntries(
+        parts.map(({ type, value }) => [type, value])
+    )
+
+    return `${values.year}-${values.month}-${values.day}`
+}
+
+export const Calendar = ({
+    selectedDate,
+    onSelectDate,
+    dailyResults = []
+}) => {
+    const today = getTodayWIB()
+    const [month, setMonth] = useState(
+        Number(today.slice(5, 7)) - 1
+    )
+    const [year, setYear] = useState(
+        Number(today.slice(0, 4))
+    )
 
     const firstDate = new Date(year, month, 1).getDay()
     const totalDays = new Date(year, month + 1, 0).getDate()
 
     const days = []
 
-    for (let i = 1; i <= firstDate; i++) {
+    for (let i = 0; i < firstDate; i++) {
         days.push(null)
     }
 
@@ -38,69 +49,97 @@ export const Calendar = () => {
         days.push(i)
     }
 
-    const prevBtn = () => {
-        if (month === 0) {
-            setMonth(11)
-            setYear(year - 1)
-        } else {
-            setMonth(month - 1)
-        }
+    function changeMonth(direction) {
+        const date = new Date(year, month + direction, 1)
+
+        setMonth(date.getMonth())
+        setYear(date.getFullYear())
     }
 
-    const nextBtn = () => {
-        if (month === 11) {
-            setMonth(0)
-            setYear(year + 1)
-        } else {
-            setMonth(month + 1)
-        }
+    function formatDate(day) {
+        return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
     }
 
-    console.log(days)
+    function getDailyResult(dateString) {
+        return dailyResults.find((result) => (
+            new Date(result.date).toISOString().slice(0, 10)
+                === dateString
+        ))
+    }
 
     return (
         <>
             <div className="month-nav">
-                <button className="prev-btn" onClick={prevBtn}>{'<'}</button>
-                <h2 id="monthLabel">{months[month]} {year}</h2>
-                <button className="next-btn" onClick={nextBtn}>{'>'}</button>
+                <button
+                    type="button"
+                    className="prev-btn"
+                    onClick={() => changeMonth(-1)}
+                >
+                    {'<'}
+                </button>
+
+                <h2 id="monthLabel">
+                    {months[month]} {year}
+                </h2>
+
+                <button
+                    type="button"
+                    className="next-btn"
+                    onClick={() => changeMonth(1)}
+                >
+                    {'>'}
+                </button>
             </div>
 
             <div className="weekdays">
-                <span>Min</span>
-                <span>Sen</span>
-                <span>Sel</span>
-                <span>Rab</span>
-                <span>Kam</span>
-                <span>Jum</span>
-                <span>Sab</span>
+                {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
+                    .map((day) => (
+                        <span key={day}>{day}</span>
+                    ))}
             </div>
 
             <div className="calendar" id="calendar">
                 {days.map((day, index) => {
-
                     if (day === null) {
                         return (
-                            <div className="empty" key={`empty-${index}`}></div>
+                            <div
+                                className="empty"
+                                key={`empty-${index}`}
+                            />
                         )
                     }
 
-                    const isToday =
-                        day === currentToday &&
-                        month === currentMonth &&
-                        year === currentYear
+                    const dateString = formatDate(day)
+                    const isToday = dateString === today
+                    const isSelected = dateString === selectedDate
+                    const result = getDailyResult(dateString)
+
+                    let statusClass = ''
+
+                    if (result) {
+                        statusClass = result.status
+                            ? 'day-success'
+                            : 'day-failed'
+                    }
 
                     return (
-                        <div
-                            className={`day ${isToday ? 'today-highlight' : ''}`}
-                            key={day}
+                        <button
+                            type="button"
+                            key={dateString}
+                            className={[
+                                'day',
+                                isToday ? 'today-highlight' : '',
+                                isSelected ? 'selected-day' : '',
+                                statusClass
+                            ].filter(Boolean).join(' ')}
+                            onClick={() => onSelectDate(dateString)}
+                            aria-pressed={isSelected}
                         >
                             {day}
-                        </div>
+                        </button>
                     )
                 })}
             </div>
         </>
     )
 }
-

@@ -1,28 +1,51 @@
-import Link from 'next/link'
-import { Calendar } from '@/app/component/render-calendar'
-import { Clock } from '@/app/component/update-clock' 
-import { Todolist } from '@/app/component/todolist'
+import './global.css'
+import { prisma } from './libs/prisma'
+import { getServerSession } from 'next-auth'
+import { authOption } from './api/auth/[...nextauth]/route'
+import { redirect } from 'next/navigation'
+import { processMissedDates } from './libs/daily-tracking'
+import { TrackingCalendar } from '@/app/component/tracking-calendar'
+import { Clock } from '@/app/component/update-clock'
+import { addTask } from '@/app/actions/todolist'
 
-const Page = () => {
+export default async function Page() {
+    const session = await getServerSession(authOption)
 
-  return (
-    <div className="main">
-      <section className="calendar-container">
+    if (!session?.user?.id) {
+        redirect('/api/auth/signin')
+    }
 
-        <Calendar />
+    const userId = Number(session.user.id)
 
-      </section>
+    await processMissedDates(userId)
 
-      <aside>
+    const [tasks, dailyResults] = await Promise.all([
+        prisma.tasks.findMany({
+            where: {
+                user_id: userId
+            },
+            orderBy: {
+                id: 'desc'
+            }
+        }),
 
-        <Clock />
+        prisma.daily_results.findMany({
+            where: {
+                user_id: userId
+            },
+            orderBy: {
+                date: 'asc'
+            }
+        })
+    ])
 
-        <Todolist />        
-
-      </aside>
-    </div>
-
-  )
+    return (
+        <>
+            <TrackingCalendar
+                tasks={tasks}
+                dailyResults={dailyResults}
+                addTask={addTask}
+            />
+        </>
+    )
 }
-
-export default Page
