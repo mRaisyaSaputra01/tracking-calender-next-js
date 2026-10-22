@@ -2,6 +2,9 @@ import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../../generated/prisma/client.ts";
 import fs from "node:fs"
+import path from "node:path"
+
+const caPath = path.resolve(process.cwd(), process.env.CA)
 
 const adapter = new PrismaMariaDb({
   host: process.env.DATABASE_HOST,
@@ -9,7 +12,7 @@ const adapter = new PrismaMariaDb({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   ssl: {
-    ca: fs.readFileSync(process.env.CA)
+    ca: fs.readFileSync(caPath)
   },
   connectionLimit: 5,
 });
