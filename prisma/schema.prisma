@@ -37,4 +37,3 @@ model daily_results {
   user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
   @@unique([user_id, date])
 }
-
