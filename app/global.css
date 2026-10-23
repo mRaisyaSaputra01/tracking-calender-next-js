@@ -9,7 +9,9 @@
     --accent-soft: rgba(132, 112, 255, 0.16);
     --danger: #e57373;
     --danger-soft: rgba(229, 115, 115, 0.14);
-
+    --success: #56d364;
+    --failed: #A94452;
+    
 }
 
 body[data-theme="light"] {
@@ -23,7 +25,6 @@ body[data-theme="light"] {
     --accent-soft: rgba(112, 92, 230, 0.12);
     --danger: #d95c68;
     --danger-soft: rgba(229, 115, 115, 0.14);
-
 }
 
 * {
@@ -404,13 +405,13 @@ body {
     transform: translateY(-1px);
 }
 
-.day.success {
-    background: green;
+.day-success {
+    background: var(--success);
     color: white;
 }
 
-.day.fail {
-    background: red;
+.day-failed {
+    background: var(--failed);
     color: white;
 }
 
