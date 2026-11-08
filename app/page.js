@@ -5,7 +5,6 @@ import { authOption } from './api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
 import { processMissedDates } from './libs/daily-tracking'
 import { TrackingCalendar } from '@/app/component/tracking-calendar'
-import { Clock } from '@/app/component/update-clock'
 import { addTask } from '@/app/actions/todolist'
 
 export default async function Page() {
@@ -17,8 +16,13 @@ export default async function Page() {
 
     const userId = Number(session.user.id)
 
-    await processMissedDates(userId)
+    const missedStart = performance.now();
+    await processMissedDates(userId);
+    console.log(
+        `[PROFILE] processMissedDates: ${(performance.now() - missedStart).toFixed(2)} ms`
+    );
 
+    const fetchStart = performance.now();
     const [tasks, dailyResults] = await Promise.all([
         prisma.tasks.findMany({
             where: {
@@ -38,6 +42,9 @@ export default async function Page() {
             }
         })
     ])
+    console.log(
+        `[PROFILE] Fetch tasks & dailyResults: ${(performance.now() - fetchStart).toFixed(2)} ms`
+    );
 
     return (
         <>

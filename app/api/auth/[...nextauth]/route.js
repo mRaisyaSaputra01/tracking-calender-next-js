@@ -1,7 +1,10 @@
 import NextAuth from "next-auth"
 import githubAuth from "next-auth/providers/github"
 import googleAuth from "next-auth/providers/google"
+import { getServerSession } from "next-auth"
 import { prisma } from "@/app/libs/prisma"
+import console from "node:console"
+import { Session } from "node:inspector"
 
 export const authOption = {
     providers: [
@@ -54,8 +57,10 @@ export const authOption = {
             return session
         }
     },
+
     secret: process.env.NEXTAUTH_SECRET
 }
+
 
 const handler = NextAuth(authOption)
 

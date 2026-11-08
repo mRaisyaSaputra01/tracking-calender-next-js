@@ -5,6 +5,10 @@ import { getServerSession } from 'next-auth';
 import { authOption } from '@/app/api/auth/[...nextauth]/route';
 import { revalidatePath } from 'next/cache';
 
+function logTime(label, start) {
+    console.log(`[PROFILE] ${label}: ${(performance.now() - start).toFixed(2)} ms`);
+}
+
 // Mengambil tanggal hari ini berdasarkan WIB.
 function getTodayWIB() {
     const parts = new Intl.DateTimeFormat('en-CA', {
@@ -120,12 +124,15 @@ export async function addTask(formData) {
 // Menandai tugas selesai atau belum selesai.
 export async function toggleTask(taskId) {
     const userId = await getAuthenticatedUser();
+    const totalStart = performance.now();
+    logTime('Authentication', totalStart);
     const id = Number(taskId);
 
     if (!Number.isSafeInteger(id) || id <= 0) {
         throw new Error('Invalid task ID');
     }
 
+    const findStart = performance.now();
     const task = await prisma.tasks.findFirst({
         where: {
             id,
@@ -139,6 +146,7 @@ export async function toggleTask(taskId) {
         }
     });
 
+    logTime('Find task', findStart);
     if (!task) {
         throw new Error('Task not found');
     }
@@ -147,8 +155,11 @@ export async function toggleTask(taskId) {
         throw new Error('Tugas sudah dikunci');
     }
 
+    const validationStart = performance.now();
     await assertDateEditable(userId, task.date);
+    logTime('Date validation', validationStart);
 
+    const updateStart = performance.now();
     const result = await prisma.tasks.updateMany({
         where: {
             id,
@@ -160,12 +171,14 @@ export async function toggleTask(taskId) {
             completed: !task.completed
         }
     });
+    logTime('Update task', updateStart);
 
     if (result.count === 0) {
         throw new Error('Tugas tidak dapat diubah');
     }
 
     revalidatePath('/');
+    logTime('Total toggleTask', totalStart);
 }
 
 // Menghapus tugas.
@@ -196,7 +209,7 @@ export async function removeTask(taskId) {
     if (task.locked) {
         throw new Error('Tugas sudah dikunci');
     }
-
+    
     await assertDateEditable(userId, task.date);
 
     const result = await prisma.tasks.deleteMany({

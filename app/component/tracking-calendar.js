@@ -66,9 +66,7 @@ export const TrackingCalendar = ({
                     {dailyResult && (
                         <p>
                             Status hari ini:{' '}
-                            {dailyResult.status
-                                ? 'Berhasil'
-                                : 'Gagal'}
+                            {dailyResult.status? 'Berhasil' : 'Gagal'}
                         </p>
                     )}
 
